@@ -139,6 +139,7 @@
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="PhysTrajectory.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Position.hpp" />
     <ClInclude Include="Scorebug.hpp" />
   </ItemGroup>
   <ItemGroup>

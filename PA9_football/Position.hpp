@@ -6,3 +6,14 @@
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #pragma once
+
+enum class Position
+{
+	Quarterback,
+	RunningBack,
+	WideReceiver,
+	TightEnd,
+	OffensiveLineman,
+	DefensiveLineman,
+	Defender
+};
