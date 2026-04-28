@@ -6,18 +6,20 @@
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #include "Player.hpp"
+#include <SFML/Window.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Graphics.hpp>
 
 void Player::handleInput() {
     velocity = { 0.f, 0.f };
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
         velocity.y = -speed;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         velocity.y = speed;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
         velocity.x = -speed;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
         velocity.x = speed;
 }
 
