@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="PA9_football/PA9_football.vcxproj" Id="1f9e1596-c615-4d29-9087-90ce37bdd684" />
+</Solution>
