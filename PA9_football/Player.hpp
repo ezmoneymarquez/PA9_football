@@ -8,11 +8,19 @@
 
 #pragma once
 #include "Entity.hpp"
+#include "Position.hpp"
 
 class Player : public Entity {
 public:
+    Position position;
+
+    Player(Position pos);
+
     float speed = 200.f;
 
     void handleInput(); // 
     void update(float dt) override;
+
+    bool isOffense() const;
+    bool isDefense() const;
 };

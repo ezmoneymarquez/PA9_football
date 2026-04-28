@@ -15,5 +15,5 @@ enum class Position
 	TightEnd,
 	OffensiveLineman,
 	DefensiveLineman,
-	Defender
+	DefensiveBack
 };

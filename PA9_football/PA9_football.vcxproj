@@ -144,7 +144,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="Endzone.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhysTrajectory.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

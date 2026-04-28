@@ -6,5 +6,17 @@
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #pragma once
-#include "Entity.hpp"
+#include "Player.hpp"
 #include <SFML/Graphics.hpp>
+
+class Endzone
+{
+private:
+	sf::RectangleShape area;
+
+public:
+	Endzone(const sf::Vector2f& position, const sf::Vector2f& size);
+
+	bool checkTD(const Player& player) const;
+	void draw(sf::RenderWindow& window) const;
+};

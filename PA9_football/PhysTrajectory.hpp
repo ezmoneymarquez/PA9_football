@@ -6,3 +6,16 @@
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #pragma once
+
+#include <SFML/System.hpp>
+
+class PhysTrajectory
+{
+public:
+	static void applyLinear(sf::Vector2f& position, sf::Vector2f& velocity, float dt);
+
+	static void applyFriction(sf::Vector2f& velocity, float friction);
+
+	static void applyGravity(sf::Vector2f& velocity, float gravity, float dt);
+
+};
