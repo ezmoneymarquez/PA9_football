@@ -6,3 +6,5 @@
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #pragma once
+#include "Entity.hpp"
+#include <SFML/Graphics.hpp>

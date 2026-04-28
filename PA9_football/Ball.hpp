@@ -13,6 +13,7 @@ class Ball : public Entity
 public:
 	Player* ballcarrier = nullptr;
 
+	void update(float dt) override;
 	void receiveBall(Player* player); // This function is called when a player receives the ball. It sets the ballcarrier to the player who received the ball.
-	void throwBall(); // This function is called when the ballcarrier throws the ball. It sets the ballcarrier to nullptr, indicating that the ball is now in the air and not being carried by any player.
+	void throwBall(const sf::Vector2f& direction, float force)); // This function is called when the ballcarrier throws the ball. It sets the ballcarrier to nullptr, indicating that the ball is now in the air and not being carried by any player.
 };
