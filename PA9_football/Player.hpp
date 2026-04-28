@@ -5,4 +5,14 @@
 *	Date: April 27, 2026																 *
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 #pragma once
+#include "Entity.h"
+
+class Player : public Entity {
+public:
+    float speed = 200.f;
+
+    void handleInput(); // 
+    void update(float dt) override;
+};
