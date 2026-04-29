@@ -137,6 +137,8 @@
     <ClInclude Include="Collisions.hpp" />
     <ClInclude Include="Endzone.hpp" />
     <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="GameState.hpp" />
     <ClInclude Include="PhysTrajectory.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Position.hpp" />
@@ -146,6 +148,8 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Endzone.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysTrajectory.cpp" />
     <ClCompile Include="Player.cpp" />
