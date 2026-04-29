@@ -12,11 +12,15 @@
 #include "Ball.hpp"
 #include "EndZone.hpp"
 #include "GameState.hpp"
+#include <map>
+#include <string>
 
 // Runs the 
 class Game {
 private:
     sf::RenderWindow window;
+
+	std::map<std::string, sf::Texture> textures;
 
     // Players
     Player qb;

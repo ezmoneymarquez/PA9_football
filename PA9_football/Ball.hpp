@@ -15,8 +15,8 @@ class Ball : public Entity
 public:
 	Player* ballcarrier = nullptr;
 
-	Ball(const sf::Vector2f& position)
-		: Entity(position), ballcarrier(nullptr)
+	Ball(const sf::Vector2f& position, const sf::Texture texture)
+		: Entity(position, texture), ballcarrier(nullptr)
 	{}
 
 	// Optional default

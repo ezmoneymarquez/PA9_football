@@ -9,6 +9,19 @@ Game::Game()
     ball({ 100.f, 300.f }),
     endZone({ 750.f, 0.f }, { 50.f, 600.f })
 {
+    // Load textures
+    textures["qb"].loadFromFile("american_football_player_sprite.png");
+    textures["receiver"].loadFromFile("american_football_player_sprite.png");
+    textures["defender"].loadFromFile("american_football_player_sprite.png");
+    textures["ball"].loadFromFile("Fooball.png");
+    
+    
+    qb.sprite.setTexture(textures["qb"]);
+    receiver.sprite.setTexture(textures["receiver"]);
+    defender.sprite.setTexture(textures["defender"]);
+    ball.sprite.setTexture(textures["ball"]);
+
+    
     // Initial positions
     qb.sprite.setPosition({ 100.f, 300.f });
     receiver.sprite.setPosition({ 200.f, 200.f });
