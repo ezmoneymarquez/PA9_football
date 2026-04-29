@@ -14,10 +14,11 @@ class Player : public Entity {
 public:
     Position position;
 
-    Player(Position pos);
-
     float speed = 200.f;
     bool hasBall = false;
+    sf::Vector2f target;
+
+    Player(Position pos);
 
     void handleInput(); // 
     void update(float dt) override;
@@ -26,4 +27,9 @@ public:
     bool isDefense() const;
 
     bool canThrow() const;
+
+    void runRoute(float dt);
+
+    void chase(const Player& target, float dt);
+    bool isTackling(const Player& other) const;
 };

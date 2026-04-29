@@ -10,6 +10,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics.hpp>
 
+Player::Player(Position pos) : position(pos) {};
+
 void Player::handleInput() {
     velocity = { 0.f, 0.f };
 
@@ -28,7 +30,61 @@ void Player::update(float dt) {
     Entity::update(dt);
 }
 
+bool Player::isOffense() const
+{
+    return position == Position::Quarterback || position == Position::RunningBack ||
+        position == Position::WideReceiver || position == Position::WideReceiver ||
+        position == Position::TightEnd || position == Position::OffensiveLineman;
+}
+
+bool Player::isDefense() const
+{
+    return !isOffense();
+}
+
 bool Player::canThrow() const
 {
     return position == Position::Quarterback && hasBall;
+}
+
+void Player::runRoute(float dt)
+{
+    if (position != Position::WideReceiver)
+        return;
+
+    sf::Vector2f pos = sprite.getPosition();
+    sf::Vector2f dir = target - pos;
+
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    if (len > 1.f)
+    {
+        dir /= len;
+        velocity = dir * 150.f;
+    }
+    else
+        velocity = { 0.f, 0.f };
+
+    Entity::update(dt);
+}
+
+void Player::chase(const Player& target, float dt)
+{
+    if (!isDefense())
+        return;
+
+    sf::Vector2f pos = sprite.getPosition();
+    sf::Vector2f dir = target.sprite.getPosition() = pos;
+
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    if (len > 1.f)
+    {
+        dir /= len;
+        velocity = dir * 180.f;
+    }
+    Entity::update(dt);
+}
+
+bool Player::isTackling(const Player& other) const
+{
+    return getBounds().findIntersection(other.getBounds()).has_value();
 }
