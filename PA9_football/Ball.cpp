@@ -40,13 +40,22 @@ void Ball::update(float dt)
 void Ball::receiveBall(Player* player)
 {
 	ballcarrier = player;
+	if (player)
+		player->hasBall = true;
 }
 
 void Ball::throwBall(const sf::Vector2f& direction, float force)
 {
-	if (ballcarrier == nullptr)
+	if (!ballcarrier)
 		return;
+
+	ballcarrier->hasBall = false;
 	ballcarrier = nullptr;
-	sf::Vector2f dir = normalize(direction);
+
+	sf::Vector2f dir = direction;
+	float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+	if (len != 0)
+		dir /= len;
+
 	velocity = dir * force;
 }

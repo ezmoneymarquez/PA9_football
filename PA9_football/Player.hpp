@@ -17,10 +17,13 @@ public:
     Player(Position pos);
 
     float speed = 200.f;
+    bool hasBall = false;
 
     void handleInput(); // 
     void update(float dt) override;
 
     bool isOffense() const;
     bool isDefense() const;
+
+    bool canThrow() const;
 };

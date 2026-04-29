@@ -27,3 +27,8 @@ void Player::update(float dt) {
     handleInput();
     Entity::update(dt);
 }
+
+bool Player::canThrow() const
+{
+    return position == Position::Quarterback && hasBall;
+}
