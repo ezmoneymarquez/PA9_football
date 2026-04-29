@@ -12,7 +12,7 @@ Game::Game()
     receiver(Position::WideReceiver, receiverTexture),
     defender(Position::DefensiveBack, defenderTexture),
     ball(sf::Vector2f( 100.f, 300.f ), ballTexture),
-    endZone({ 750.f, 0.f }, { 50.f, 600.f })
+    endZone({ 700.f, 0.f }, { 100.f, 600.f })
 {
     //// Load textures
     //qbTexture.loadFromFile("Textures/american_football_player_sprite.png");
@@ -34,10 +34,10 @@ Game::Game()
     ball.sprite.setPosition({ 100.f, 300.f });
 
     // Resizing
-	qb.sprite.setScale({ .2f, .2f });
-	receiver.sprite.setScale({ .2f, .2f });
-	defender.sprite.setScale({ .2f, .2f });
-	ball.sprite.setScale({ .2f, .2f });
+	qb.sprite.setScale({ .1f, .1f });
+	receiver.sprite.setScale({ .1f, .1f });
+	defender.sprite.setScale({ .1f, .1f });
+	ball.sprite.setScale({ .03f, .03f });
 
     ball.receiveBall(&qb);
 }
