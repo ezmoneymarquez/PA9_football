@@ -15,8 +15,12 @@ int main()
     //sf::CircleShape shape(100.f);
     //shape.setFillColor(sf::Color::Green);
 
+    std::map<std::string, sf::Texture> textures;
+
     Game game;
     game.run();
+
+
 
     //while (window.isOpen())
     //{

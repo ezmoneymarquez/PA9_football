@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <iostream>
 #include <cmath>
 
 Game::Game()
@@ -29,7 +30,7 @@ Game::Game()
     ball.sprite.setPosition({ 100.f, 300.f });
 
     // Resizing
-	qb.sprite.setScale({ 3.f, 3.f });
+	qb.sprite.setScale({ 20.f, 20.f });
 	receiver.sprite.setScale({ 3.f, 3.f });
 	defender.sprite.setScale({ 3.f, 3.f });
 	ball.sprite.setScale({ 3.f, 3.f });
