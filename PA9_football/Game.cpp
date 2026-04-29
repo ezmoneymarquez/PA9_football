@@ -111,6 +111,52 @@ void Game::handleInput() {
 
 void Game::update(float dt) {
 
+    /*bool spaceNow = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+
+    if (spaceNow && !spaceHeldLastFrame)
+    {
+        if (!playStarted)
+        {
+            playStarted = true;
+            ballSnapped = true;
+
+            ball.receiveBall(&qb);
+			state.startNewPlay(qb.sprite.getPosition().x);
+        }
+    }
+
+    spaceHeldLastFrame = spaceNow;
+
+	if (!playStarted)
+        return;
+
+    handleInput();
+
+    qb.update(dt);
+    receiver1.runRoute(dt);
+	receiver2.runRoute(dt);
+
+	Player* target = ball.ballcarrier ? ball.ballcarrier : &qb;
+	defender1.chase(*target, dt);
+	defender2.chase(*target, dt);
+
+	ball.update(dt);
+
+	if (defender1.getBounds().findIntersection(qb.getBounds()).has_value() || defender2.getBounds().findIntersection(qb.getBounds()).has_value())
+    {
+        playStarted = false;
+
+        float gained = state.getYardsGained();
+
+        if (!state.checkFirstDown(gained))
+        {
+			state.yardsToGo -= gained;
+            state.down++;
+        }
+    }
+
+   */
+
     handleInput();
 
     if (!playStarted)
@@ -122,8 +168,11 @@ void Game::update(float dt) {
     receiver1.target = { 700.f, 200.f };
     receiver1.runRoute(dt);
 
+	receiver2.target = { 700.f, 400.f };
+    receiver2.runRoute(dt);
+
     // Defender chases ball carrier
-    Player* target = ball.ballcarrier ? ball.ballcarrier : &receiver1;
+    Player* target = ball.ballcarrier ? ball.ballcarrier : &qb;
     defender1.chase(*target, dt);
 
     ball.update(dt);
@@ -134,6 +183,13 @@ void Game::update(float dt) {
     if (ball.ballcarrier) {
         state.ballX = ball.ballcarrier->sprite.getPosition().x;
     }
+
+    clamp(qb.sprite);
+    clamp(receiver1.sprite);
+    clamp(receiver2.sprite);
+    clamp(defender1.sprite);
+    clamp(defender2.sprite);
+    clamp(dLine1.sprite);
 }
 
 void Game::checkCollisions() {
@@ -209,4 +265,14 @@ void Game::render() {
     
 
     window.display();
+}
+
+void clamp(sf::Sprite& s)
+{
+    auto pos = s.getPosition();
+
+    pos.x = std::max(0.f, std::min(800.f, pos.x));
+	pos.y = std::max(0.f, std::min(600.f, pos.y));
+
+	s.setPosition(pos);
 }

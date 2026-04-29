@@ -19,6 +19,8 @@
 class Game {
 private:
     bool playStarted = false;
+    bool ballSnapped = false;
+	bool spaceHeldLastFrame = false;
 
     sf::RenderWindow window;
 
@@ -70,3 +72,5 @@ private:
     void checkCollisions();
     void endPlay(bool touchdown);
 };
+
+void clamp(sf::Sprite& s);
