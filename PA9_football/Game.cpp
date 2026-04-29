@@ -6,7 +6,7 @@ Game::Game()
     : window(sf::VideoMode({ 800, 600 }), "2D Football"),
     qbTexture("Textures/american_football_player_sprite.png"),
 	receiverTexture("Textures/american_football_player_sprite.png"),
-	defenderTexture("Textures/american_football_player_sprite.png"),
+	defenderTexture("Textures/american_football_player_sprite_white.png"),
     ballTexture("Textures/Football.png"),
     fieldTexture("Textures/Field.png"),
     qb(Position::Quarterback, qbTexture),

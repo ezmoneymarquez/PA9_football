@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\american_football_player_sprite.png" />
+    <Image Include="Textures\american_football_player_sprite_white.png" />
     <Image Include="Textures\Field.png" />
     <Image Include="Textures\Football.png" />
   </ItemGroup>
