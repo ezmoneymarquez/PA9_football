@@ -201,6 +201,7 @@ void Game::update(float dt) {
     // Defender chases ball carrier
     Player* target = ball.ballcarrier ? ball.ballcarrier : &qb;
     defender1.chase(*target, dt);
+	defender2.chase(*target, dt);
 
     ball.update(dt);
 
@@ -253,12 +254,28 @@ void Game::checkCollisions()
         {
             ball.receiveBall(&receiver2);
         }
+
+         // Touchdown
+        if (ball.ballcarrier && endZone.checkTD(*ball.ballcarrier)) {
+            endPlay(true);
+        }
     }
 
     // Tackle logic (whoever has ball)
     Player* carrier = ball.ballcarrier ? ball.ballcarrier : &qb;
 
     if (defender1.getBounds().findIntersection(carrier->getBounds()))
+    {
+        playStarted = false;
+
+        float gained = state.ballX - state.startX;
+
+        if (!state.checkFirstDown(gained)) {
+            state.yardsToGo -= gained;
+            state.down++;
+        }
+    }
+    if (defender2.getBounds().findIntersection(carrier->getBounds()))
     {
         playStarted = false;
 

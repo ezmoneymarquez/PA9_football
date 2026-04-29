@@ -73,7 +73,7 @@ void Player::chase(const Player& target, float dt)
         return;
 
     sf::Vector2f pos = sprite.getPosition();
-    sf::Vector2f dir = target.sprite.getPosition() = pos;
+    sf::Vector2f dir = target.sprite.getPosition() - pos;
 
     float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     if (len > 1.f)
