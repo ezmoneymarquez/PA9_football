@@ -18,7 +18,7 @@ public:
     bool hasBall = false;
     sf::Vector2f target;
 
-    Player(Position pos);
+    Player(Position pos, sf::Texture texture);
 
     void handleInput(); // 
     void update(float dt) override;

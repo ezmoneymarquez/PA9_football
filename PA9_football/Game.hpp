@@ -22,6 +22,11 @@ private:
 
 	std::map<std::string, sf::Texture> textures;
 
+	sf::Texture qbTexture;
+	sf::Texture receiverTexture;
+	sf::Texture defenderTexture;
+	sf::Texture ballTexture;
+
     // Players
     Player qb;
     Player receiver;

@@ -3,23 +3,23 @@
 
 Game::Game()
     : window(sf::VideoMode({ 800, 600 }), "2D Football"),
-    qb(Position::Quarterback),
-    receiver(Position::WideReceiver),
-    defender(Position::DefensiveBack),
-    ball({ 100.f, 300.f }),
+    qb(Position::Quarterback, textures["qb"]),
+    receiver(Position::WideReceiver, textures["receiver"]),
+    defender(Position::DefensiveBack, textures["defender"]),
+    ball(sf::Vector2f( 100.f, 300.f ), textures["ball"]),
     endZone({ 750.f, 0.f }, { 50.f, 600.f })
 {
     // Load textures
-    textures["qb"].loadFromFile("american_football_player_sprite.png");
-    textures["receiver"].loadFromFile("american_football_player_sprite.png");
-    textures["defender"].loadFromFile("american_football_player_sprite.png");
-    textures["ball"].loadFromFile("Fooball.png");
+    qbTexture.loadFromFile("textures/american_football_player_sprite.png");
+    receiverTexture.loadFromFile("textures/american_football_player_sprite.png");
+    defenderTexture.loadFromFile("textures/american_football_player_sprite.png");
+    ballTexture.loadFromFile("textures/football.png");
     
     
-    qb.sprite.setTexture(textures["qb"]);
-    receiver.sprite.setTexture(textures["receiver"]);
-    defender.sprite.setTexture(textures["defender"]);
-    ball.sprite.setTexture(textures["ball"]);
+    qb.sprite.setTexture(qbTexture);
+    receiver.sprite.setTexture(receiverTexture);
+    defender.sprite.setTexture(defenderTexture);
+    ball.sprite.setTexture(ballTexture);
 
     
     // Initial positions
@@ -27,6 +27,12 @@ Game::Game()
     receiver.sprite.setPosition({ 200.f, 200.f });
     defender.sprite.setPosition({ 500.f, 300.f });
     ball.sprite.setPosition({ 100.f, 300.f });
+
+    // Resizing
+	qb.sprite.setScale({ 3.f, 3.f });
+	receiver.sprite.setScale({ 3.f, 3.f });
+	defender.sprite.setScale({ 3.f, 3.f });
+	ball.sprite.setScale({ 3.f, 3.f });
 
     ball.receiveBall(&qb);
 }

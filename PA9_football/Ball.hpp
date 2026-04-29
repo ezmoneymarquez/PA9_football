@@ -15,12 +15,12 @@ class Ball : public Entity
 public:
 	Player* ballcarrier = nullptr;
 
-	Ball(const sf::Vector2f& position, const sf::Texture texture)
+	Ball(sf::Vector2f position, sf::Texture& texture)
 		: Entity(position, texture), ballcarrier(nullptr)
 	{}
 
 	// Optional default
-	Ball() : Ball({ 0.f, 0.f }) {}
+	//Ball() : Ball({ 0.f, 0.f }) {}
 
 	void update(float dt) override;
 	void receiveBall(Player* player); // This function is called when a player receives the ball. It sets the ballcarrier to the player who received the ball.

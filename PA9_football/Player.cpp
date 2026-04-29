@@ -10,7 +10,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics.hpp>
 
-Player::Player(Position pos) : position(pos) {};
+Player::Player(Position pos, sf::Texture texture) : position(pos), Entity(texture) {};
 
 void Player::handleInput() {
     velocity = { 0.f, 0.f };

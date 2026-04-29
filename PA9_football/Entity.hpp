@@ -14,14 +14,16 @@ class Entity {
 public:
     sf::Sprite sprite; // Image of the object
     sf::Vector2f velocity; // speed and direction of the object
-    Entity(sf::Texture& texture, sf::Vector2f& position)
+    Entity(sf::Vector2f& position, sf::Texture& texture)
         : velocity(0.f, 0.f), sprite(texture)
     {
         sprite.setPosition(position);
     }
 
     // Optional: allow default too (recommended)
-    Entity(sf::Texture texture) : Entity(texture, { 0.f, 0.f }) {}
+    Entity(sf::Texture& texture) : velocity(0.f, 0.f), sprite(texture) {
+		sprite.setPosition({ 0.f, 0.f });
+    }
 
     virtual ~Entity() {}
 
