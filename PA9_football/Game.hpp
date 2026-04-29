@@ -18,20 +18,30 @@
 // Runs the 
 class Game {
 private:
+    bool playStarted = false;
+
     sf::RenderWindow window;
 
 	std::map<std::string, sf::Texture> textures;
 
 	sf::Texture qbTexture;
-	sf::Texture receiverTexture;
-	sf::Texture defenderTexture;
+	sf::Texture receiver1Texture;
+	sf::Texture receiver2Texture;
+    sf::Texture oLineTexture;
+    sf::Texture dLineTexture;
+	sf::Texture defender1Texture;
+	sf::Texture defender2Texture;
 	sf::Texture ballTexture;
 	sf::Texture fieldTexture;
 
     // Players
     Player qb;
-    Player receiver;
-    Player defender;
+    Player receiver1;
+    Player receiver2;
+	Player oLine1;
+	Player dLine1;
+    Player defender1;
+    Player defender2;
 
     Ball ball;
     Endzone endZone;

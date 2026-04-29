@@ -5,13 +5,21 @@
 Game::Game()
     : window(sf::VideoMode({ 800, 600 }), "2D Football"),
     qbTexture("Textures/american_football_player_sprite.png"),
-	receiverTexture("Textures/american_football_player_sprite.png"),
-	defenderTexture("Textures/american_football_player_sprite_white.png"),
+	receiver1Texture("Textures/american_football_player_sprite.png"),
+	receiver2Texture("Textures/american_football_player_sprite.png"),
+	oLineTexture("Textures/american_football_player_sprite.png"),
+	dLineTexture("Textures/american_football_player_sprite_white.png"),
+	defender1Texture("Textures/american_football_player_sprite_white.png"),
+	defender2Texture("Textures/american_football_player_sprite_white.png"),
     ballTexture("Textures/Football.png"),
     fieldTexture("Textures/Field.png"),
     qb(Position::Quarterback, qbTexture),
-    receiver(Position::WideReceiver, receiverTexture),
-    defender(Position::DefensiveBack, defenderTexture),
+    receiver1(Position::WideReceiver, receiver1Texture),
+    receiver2(Position::WideReceiver, receiver2Texture),
+    oLine1(Position::OffensiveLineman, oLineTexture),
+    dLine1(Position::DefensiveLineman, dLineTexture),
+    defender1(Position::DefensiveBack, defender1Texture),
+    defender2(Position::DefensiveBack, defender2Texture),
     ball(sf::Vector2f( 100.f, 300.f ), ballTexture),
     endZone({ 700.f, 0.f }, { 100.f, 600.f }),
     field(fieldTexture)
@@ -31,15 +39,23 @@ Game::Game()
     
     // Initial positions
     qb.sprite.setPosition({ 100.f, 300.f });
-    receiver.sprite.setPosition({ 200.f, 200.f });
-    defender.sprite.setPosition({ 500.f, 300.f });
+    receiver1.sprite.setPosition({ 200.f, 200.f });
+	receiver2.sprite.setPosition({ 200.f, 400.f });
+	oLine1.sprite.setPosition({ 200.f, 250.f });
+    dLine1.sprite.setPosition({ 500.f, 250.f });
+    defender1.sprite.setPosition({ 500.f, 200.f });
+	defender2.sprite.setPosition({ 500.f, 400.f });
     ball.sprite.setPosition({ 100.f, 300.f });
 	field.sprite.setPosition({ 0.f, 0.f });
 
     // Resizing
 	qb.sprite.setScale({ .15f, .15f });
-	receiver.sprite.setScale({ .15f, .15f });
-	defender.sprite.setScale({ .15f, .15f });
+	receiver1.sprite.setScale({ .15f, .15f });
+	receiver2.sprite.setScale({ .15f, .15f });
+	oLine1.sprite.setScale({ .15f, .15f });
+	dLine1.sprite.setScale({ .15f, .15f });
+	defender1.sprite.setScale({ .15f, .15f });
+	defender2.sprite.setScale({ .15f, .15f });  
 	ball.sprite.setScale({ .03f, .03f });
 	field.sprite.setScale({ .25f, .20f });
 
@@ -76,6 +92,11 @@ void Game::handleInput() {
         qb.velocity.x = -200.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
         qb.velocity.x = 200.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C))
+        playStarted = true;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+        playStarted = false;
+    
 
     // Throw
     if (qb.canThrow() && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
@@ -89,17 +110,21 @@ void Game::handleInput() {
 }
 
 void Game::update(float dt) {
+
     handleInput();
+
+    if (!playStarted)
+        return;
 
     qb.update(dt);
 
     // Receiver runs route
-    receiver.target = { 700.f, 200.f };
-    receiver.runRoute(dt);
+    receiver1.target = { 700.f, 200.f };
+    receiver1.runRoute(dt);
 
     // Defender chases ball carrier
-    Player* target = ball.ballcarrier ? ball.ballcarrier : &receiver;
-    defender.chase(*target, dt);
+    Player* target = ball.ballcarrier ? ball.ballcarrier : &receiver1;
+    defender1.chase(*target, dt);
 
     ball.update(dt);
 
@@ -114,13 +139,13 @@ void Game::update(float dt) {
 void Game::checkCollisions() {
     // Catch ball
     if (ball.ballcarrier == nullptr &&
-        receiver.getBounds().findIntersection(ball.getBounds()).has_value()) {
-        ball.receiveBall(&receiver);
+        receiver1.getBounds().findIntersection(ball.getBounds()).has_value()) {
+        ball.receiveBall(&receiver1);
     }
 
     // Tackle
-    if (ball.ballcarrier == &receiver &&
-        defender.isTackling(receiver)) {
+    if (ball.ballcarrier == &receiver1 &&
+        defender1.isTackling(receiver1)) {
         endPlay(false);
     }
 
@@ -152,8 +177,12 @@ void Game::endPlay(bool touchdown) {
 
     // Reset positions
     qb.sprite.setPosition({ 100.f, 300.f });
-    receiver.sprite.setPosition({ 200.f, 200.f });
-    defender.sprite.setPosition({ 500.f, 300.f });
+    receiver1.sprite.setPosition({ 200.f, 200.f });
+    receiver2.sprite.setPosition({ 200.f, 400.f });
+    oLine1.sprite.setPosition({ 200.f, 250.f });
+    dLine1.sprite.setPosition({ 500.f, 250.f });
+    defender1.sprite.setPosition({ 500.f, 200.f });
+    defender2.sprite.setPosition({ 500.f, 400.f });
     ball.sprite.setPosition({ 100.f, 300.f });
 
     ball.receiveBall(&qb);
@@ -170,8 +199,12 @@ void Game::render() {
     field.draw(window);
     
     qb.draw(window);
-    receiver.draw(window);
-    defender.draw(window);
+    receiver1.draw(window);
+    receiver2.draw(window);
+    oLine1.draw(window);
+    dLine1.draw(window);
+    defender1.draw(window);
+    defender2.draw(window);
     ball.draw(window);
     
 
