@@ -243,23 +243,42 @@ void Game::update(float dt) {
 void Game::checkCollisions()
 {
     // Only if ball is in the air
-    if (ball.ballcarrier == nullptr)
-    {
-        if (receiver1.getBounds().findIntersection(ball.getBounds()).has_value())
-        {
+    //if (ball.ballcarrier == nullptr)
+    //{
+    //    if (receiver1.getBounds().findIntersection(ball.getBounds()).has_value())
+    //    {
+    //        ball.receiveBall(&receiver1);
+    //    }
+
+    //    else if (receiver2.getBounds().findIntersection(ball.getBounds()).has_value())
+    //    {
+    //        ball.receiveBall(&receiver2);
+    //    }
+
+    //     // Touchdown
+    //    if (ball.ballcarrier && endZone.checkTD(*ball.ballcarrier)) {
+    //        endPlay(true);
+    //        return;
+    //    }
+    //}
+
+    if (ball.ballcarrier == nullptr) {
+        auto ballPos = ball.sprite.getPosition();
+
+        auto dist = [&](const Player& p) {
+            sf::Vector2f d = p.sprite.getPosition() - ballPos;
+            return d.x * d.x + d.y * d.y;  // squared distance, no sqrt needed
+            };
+
+        bool r1hit = receiver1.getBounds().findIntersection(ball.getBounds()).has_value();
+        bool r2hit = receiver2.getBounds().findIntersection(ball.getBounds()).has_value();
+
+        if (r1hit && r2hit)
+            ball.receiveBall(dist(receiver1) < dist(receiver2) ? &receiver1 : &receiver2);
+        else if (r1hit)
             ball.receiveBall(&receiver1);
-        }
-
-        else if (receiver2.getBounds().findIntersection(ball.getBounds()).has_value())
-        {
+        else if (r2hit)
             ball.receiveBall(&receiver2);
-        }
-
-         // Touchdown
-        if (ball.ballcarrier && endZone.checkTD(*ball.ballcarrier)) {
-            endPlay(true);
-            return;
-        }
     }
 
     // Tackle logic (whoever has ball)
