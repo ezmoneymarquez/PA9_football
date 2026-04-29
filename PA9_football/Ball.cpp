@@ -22,7 +22,7 @@ void Ball::update(float dt)
 	if (ballcarrier != nullptr)
 	{
 		sf::Vector2f playerPos = ballcarrier->sprite.getPosition();
-		sprite.setPosition({ playerPos.x + 20.f, playerPos.y });
+		sprite.setPosition({ playerPos.x + 20.f, playerPos.y + 12.5f });
 		velocity = { 0.f, 0.f };
 	}
 	else

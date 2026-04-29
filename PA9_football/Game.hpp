@@ -26,6 +26,7 @@ private:
 	sf::Texture receiverTexture;
 	sf::Texture defenderTexture;
 	sf::Texture ballTexture;
+	sf::Texture fieldTexture;
 
     // Players
     Player qb;
@@ -34,6 +35,8 @@ private:
 
     Ball ball;
     Endzone endZone;
+
+    Field field;
 
     GameState state;
 

@@ -20,3 +20,16 @@ public:
 	bool checkTD(const Player& player) const;
 	void draw(sf::RenderWindow& window) const;
 };
+
+class Field
+{
+public:
+	sf::Sprite sprite;
+	sf::Texture texture;
+
+	Field(sf::Texture& texture) : sprite(texture){}
+
+	void draw(sf::RenderWindow& window) const {
+		window.draw(sprite);
+	}
+};
