@@ -4,23 +4,27 @@
 
 Game::Game()
     : window(sf::VideoMode({ 800, 600 }), "2D Football"),
-    qb(Position::Quarterback, textures["qb"]),
-    receiver(Position::WideReceiver, textures["receiver"]),
-    defender(Position::DefensiveBack, textures["defender"]),
-    ball(sf::Vector2f( 100.f, 300.f ), textures["ball"]),
+    qbTexture("Textures/american_football_player_sprite.png"),
+	receiverTexture("Textures/american_football_player_sprite.png"),
+	defenderTexture("Textures/american_football_player_sprite.png"),
+    ballTexture("Textures/football.png"),
+    qb(Position::Quarterback, qbTexture),
+    receiver(Position::WideReceiver, receiverTexture),
+    defender(Position::DefensiveBack, defenderTexture),
+    ball(sf::Vector2f( 100.f, 300.f ), ballTexture),
     endZone({ 750.f, 0.f }, { 50.f, 600.f })
 {
-    // Load textures
-    qbTexture.loadFromFile("textures/american_football_player_sprite.png");
-    receiverTexture.loadFromFile("textures/american_football_player_sprite.png");
-    defenderTexture.loadFromFile("textures/american_football_player_sprite.png");
-    ballTexture.loadFromFile("textures/football.png");
-    
-    
-    qb.sprite.setTexture(qbTexture);
-    receiver.sprite.setTexture(receiverTexture);
-    defender.sprite.setTexture(defenderTexture);
-    ball.sprite.setTexture(ballTexture);
+    //// Load textures
+    //qbTexture.loadFromFile("Textures/american_football_player_sprite.png");
+    //receiverTexture.loadFromFile("Textures/american_football_player_sprite.png");
+    //defenderTexture.loadFromFile("Textures/american_football_player_sprite.png");
+    //ballTexture.loadFromFile("Textures/football.png");
+    //
+    //
+    //qb.sprite.setTexture(qbTexture);
+    //receiver.sprite.setTexture(receiverTexture);
+    //defender.sprite.setTexture(defenderTexture);
+    //ball.sprite.setTexture(ballTexture);
 
     
     // Initial positions
@@ -30,10 +34,10 @@ Game::Game()
     ball.sprite.setPosition({ 100.f, 300.f });
 
     // Resizing
-	qb.sprite.setScale({ 20.f, 20.f });
-	receiver.sprite.setScale({ 3.f, 3.f });
-	defender.sprite.setScale({ 3.f, 3.f });
-	ball.sprite.setScale({ 3.f, 3.f });
+	qb.sprite.setScale({ .2f, .2f });
+	receiver.sprite.setScale({ .2f, .2f });
+	defender.sprite.setScale({ .2f, .2f });
+	ball.sprite.setScale({ .2f, .2f });
 
     ball.receiveBall(&qb);
 }
