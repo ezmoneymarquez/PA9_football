@@ -42,7 +42,7 @@ Game::Game()
     receiver1.sprite.setPosition({ 200.f, 200.f });
 	receiver2.sprite.setPosition({ 200.f, 400.f });
 	oLine1.sprite.setPosition({ 200.f, 250.f });
-    dLine1.sprite.setPosition({ 500.f, 250.f });
+    dLine1.sprite.setPosition({ 475.f, 300.f });
     defender1.sprite.setPosition({ 500.f, 200.f });
 	defender2.sprite.setPosition({ 500.f, 400.f });
     ball.sprite.setPosition({ 100.f, 300.f });
@@ -162,6 +162,9 @@ void Game::update(float dt) {
 
     handleInput();
 
+    if (!playStarted)
+        return;
+
     bool throwNow = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
 
     if (throwNow && !throwHeldLastFrame)
@@ -171,8 +174,8 @@ void Game::update(float dt) {
             // choose receiver (simple: closest)
             Player* targetReceiver = &receiver1;
 
-            float d1 = std::abs(receiver1.sprite.getPosition().x - qb.sprite.getPosition().x);
-            float d2 = std::abs(receiver2.sprite.getPosition().x - qb.sprite.getPosition().x);
+            float d1 = std::sqrt(std::pow(receiver1.sprite.getPosition().x - qb.sprite.getPosition().x, 2) + std::pow(receiver1.sprite.getPosition().y - qb.sprite.getPosition().y, 2));
+			float d2 = std::sqrt(std::pow(receiver2.sprite.getPosition().x - qb.sprite.getPosition().x, 2) + std::pow(receiver2.sprite.getPosition().y - qb.sprite.getPosition().y, 2));
 
             if (d2 < d1)
                 targetReceiver = &receiver2;
@@ -180,7 +183,8 @@ void Game::update(float dt) {
             sf::Vector2f dir =
                 targetReceiver->sprite.getPosition() - qb.sprite.getPosition();
 
-            ball.throwBall(dir, 50000.f);
+            ball.throwBall(dir, 30000.f);
+			passInAir = true;
         }
     }
 
@@ -202,8 +206,45 @@ void Game::update(float dt) {
     Player* target = ball.ballcarrier ? ball.ballcarrier : &qb;
     defender1.chase(*target, dt);
 	defender2.chase(*target, dt);
+	dLine1.chase(*target, dt);
 
     ball.update(dt);
+
+    // ================= INCOMPLETE PASS =================
+    if (passInAir && ball.ballcarrier == nullptr)
+    {
+        float speed = std::sqrt(ball.velocity.x * ball.velocity.x +
+            ball.velocity.y * ball.velocity.y);
+
+        // if ball slowed down enough → no catch → dead play
+        if (speed < 20.f)
+        {
+            std::cout << "INCOMPLETE PASS\n";
+
+            playStarted = false;
+            passInAir = false;
+
+            // update down (no yards gained)
+            float gained = state.ballX - state.startX;
+
+            if (!state.checkFirstDown(gained)) {
+                state.yardsToGo -= gained;
+                state.down++;
+            }
+
+            // reset positions
+            qb.sprite.setPosition({ 100.f, 300.f });
+            receiver1.sprite.setPosition({ 200.f, 200.f });
+            receiver2.sprite.setPosition({ 200.f, 400.f });
+            oLine1.sprite.setPosition({ 200.f, 250.f });
+            dLine1.sprite.setPosition({ 475.f, 300.f });
+            defender1.sprite.setPosition({ 500.f, 200.f });
+            defender2.sprite.setPosition({ 500.f, 400.f });
+            ball.sprite.setPosition({ 100.f, 300.f });
+
+            ball.receiveBall(&qb);
+        }
+    }
 
     checkCollisions();
 
@@ -274,19 +315,28 @@ void Game::checkCollisions()
         bool r2hit = receiver2.getBounds().findIntersection(ball.getBounds()).has_value();
 
         if (r1hit && r2hit)
+        {
             ball.receiveBall(dist(receiver1) < dist(receiver2) ? &receiver1 : &receiver2);
+			passInAir = false;  // Ball is no longer in the air after being caught
+        }
         else if (r1hit)
+        {
             ball.receiveBall(&receiver1);
+			passInAir = false;  // Ball is no longer in the air after being caught
+        }
         else if (r2hit)
+        {
             ball.receiveBall(&receiver2);
+			passInAir = false;  // Ball is no longer in the air after being caught
+        }
     }
 
     // Tackle logic (whoever has ball)
     Player* carrier = ball.ballcarrier ? ball.ballcarrier : &qb;
 
-	if ((ball.ballcarrier == &qb && (defender1.isTackling(qb) || defender2.isTackling(qb))) ||
-        (ball.ballcarrier == &receiver1 && (defender1.isTackling(receiver1) || defender2.isTackling(receiver1))) ||
-        (ball.ballcarrier == &receiver2 && (defender1.isTackling(receiver2) || defender2.isTackling(receiver2))))
+	if ((ball.ballcarrier == &qb && (defender1.isTackling(qb) || defender2.isTackling(qb) || dLine1.isTackling(qb))) ||
+        (ball.ballcarrier == &receiver1 && (defender1.isTackling(receiver1) || defender2.isTackling(receiver1) || dLine1.isTackling(receiver1))) ||
+        (ball.ballcarrier == &receiver2 && (defender1.isTackling(receiver2) || defender2.isTackling(receiver2) || dLine1.isTackling(receiver2))))
     {
         endPlay(false);
     }
@@ -307,7 +357,11 @@ void Game::checkCollisions()
             qb.sprite.setPosition({ 100.f, 300.f });
             receiver1.sprite.setPosition({ 200.f, 200.f });
             receiver2.sprite.setPosition({ 200.f, 400.f });
-            defender1.sprite.setPosition({ 500.f, 300.f });
+            oLine1.sprite.setPosition({ 200.f, 250.f });
+            dLine1.sprite.setPosition({ 475.f, 300.f });
+            defender1.sprite.setPosition({ 500.f, 200.f });
+            defender2.sprite.setPosition({ 500.f, 400.f });
+            ball.sprite.setPosition({ 100.f, 300.f });
 
             ball.receiveBall(&qb);
 
@@ -365,7 +419,7 @@ void Game::endPlay(bool touchdown) {
     receiver1.sprite.setPosition({ 200.f, 200.f });
     receiver2.sprite.setPosition({ 200.f, 400.f });
     oLine1.sprite.setPosition({ 200.f, 250.f });
-    dLine1.sprite.setPosition({ 500.f, 250.f });
+    dLine1.sprite.setPosition({ 475.f, 300.f });
     defender1.sprite.setPosition({ 500.f, 200.f });
     defender2.sprite.setPosition({ 500.f, 400.f });
     ball.sprite.setPosition({ 100.f, 300.f });

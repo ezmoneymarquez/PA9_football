@@ -22,6 +22,7 @@ private:
     bool ballSnapped = false;
 	bool spaceHeldLastFrame = false;
     bool throwHeldLastFrame = false;
+    bool passInAir = false;
 
     sf::RenderWindow window;
 
