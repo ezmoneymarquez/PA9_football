@@ -21,7 +21,7 @@ Game::Game()
     defender1(Position::DefensiveBack, defender1Texture),
     defender2(Position::DefensiveBack, defender2Texture),
     ball(sf::Vector2f( 100.f, 300.f ), ballTexture),
-    endZone({ 700.f, 0.f }, { 100.f, 600.f }),
+    endZone({ 700.f, 0.f }, { 125.f, 600.f }),
     field(fieldTexture)
 {
     //// Load textures
@@ -245,12 +245,12 @@ void Game::checkCollisions()
     // Only if ball is in the air
     if (ball.ballcarrier == nullptr)
     {
-        if (receiver1.getBounds().findIntersection(ball.getBounds()))
+        if (receiver1.getBounds().findIntersection(ball.getBounds()).has_value())
         {
             ball.receiveBall(&receiver1);
         }
 
-        if (receiver2.getBounds().findIntersection(ball.getBounds()))
+        else if (receiver2.getBounds().findIntersection(ball.getBounds()).has_value())
         {
             ball.receiveBall(&receiver2);
         }
@@ -258,13 +258,47 @@ void Game::checkCollisions()
          // Touchdown
         if (ball.ballcarrier && endZone.checkTD(*ball.ballcarrier)) {
             endPlay(true);
+            return;
         }
     }
 
     // Tackle logic (whoever has ball)
     Player* carrier = ball.ballcarrier ? ball.ballcarrier : &qb;
 
-    if (defender1.getBounds().findIntersection(carrier->getBounds()))
+	if ((ball.ballcarrier == &qb && (defender1.isTackling(qb) || defender2.isTackling(qb))) ||
+        (ball.ballcarrier == &receiver1 && (defender1.isTackling(receiver1) || defender2.isTackling(receiver1))) ||
+        (ball.ballcarrier == &receiver2 && (defender1.isTackling(receiver2) || defender2.isTackling(receiver2))))
+    {
+        endPlay(false);
+    }
+
+    // ================= TOUCHDOWN CHECK =================
+    if (ball.ballcarrier)
+    {
+        if (endZone.checkTD(*ball.ballcarrier))
+        {
+            // Touchdown logic
+            playStarted = false;
+
+            std::cout << "TOUCHDOWN!\n";
+
+            state.addTouchdown();
+
+            // Reset play
+            qb.sprite.setPosition({ 100.f, 300.f });
+            receiver1.sprite.setPosition({ 200.f, 200.f });
+            receiver2.sprite.setPosition({ 200.f, 400.f });
+            defender1.sprite.setPosition({ 500.f, 300.f });
+
+            ball.receiveBall(&qb);
+
+            state.startNewPlay(qb.sprite.getPosition().x);
+
+            return; // stop further collision checks
+        }
+    }
+
+    /*if (defender1.getBounds().findIntersection(carrier->getBounds()))
     {
         playStarted = false;
 
@@ -285,7 +319,7 @@ void Game::checkCollisions()
             state.yardsToGo -= gained;
             state.down++;
         }
-    }
+    }*/
 }
 
 
@@ -326,8 +360,9 @@ void Game::endPlay(bool touchdown) {
 void Game::render() {
     window.clear();
 
-    endZone.draw(window);
     
+    endZone.draw(window);
+
     field.draw(window);
     
     qb.draw(window);
@@ -338,6 +373,8 @@ void Game::render() {
     defender1.draw(window);
     defender2.draw(window);
     ball.draw(window);
+
+    
     
 
     window.display();
