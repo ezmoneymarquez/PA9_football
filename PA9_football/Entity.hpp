@@ -14,6 +14,14 @@ class Entity {
 public:
     sf::Sprite sprite; // Image of the object
     sf::Vector2f velocity; // speed and direction of the object
+    Entity(const sf::Vector2f& position)
+        : velocity(0.f, 0.f)
+    {
+        sprite.setPosition(position);
+    }
+
+    // Optional: allow default too (recommended)
+    Entity() : Entity({ 0.f, 0.f }) {}
 
     virtual ~Entity() {}
 

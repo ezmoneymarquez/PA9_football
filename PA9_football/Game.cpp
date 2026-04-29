@@ -2,10 +2,11 @@
 #include <cmath>
 
 Game::Game()
-    : window(sf::VideoMode(800, 600), "2D Football"),
+    : window(sf::VideoMode({ 800, 600 }), "2D Football"),
     qb(Position::Quarterback),
     receiver(Position::WideReceiver),
     defender(Position::DefensiveBack),
+    ball({ 100.f, 300.f }),
     endZone({ 750.f, 0.f }, { 50.f, 600.f })
 {
     // Initial positions
@@ -69,7 +70,7 @@ void Game::update(float dt) {
     receiver.runRoute(dt);
 
     // Defender chases ball carrier
-    Player* target = ball.ballCarrier ? ball.ballCarrier : &receiver;
+    Player* target = ball.ballcarrier ? ball.ballcarrier : &receiver;
     defender.chase(*target, dt);
 
     ball.update(dt);
@@ -77,27 +78,27 @@ void Game::update(float dt) {
     checkCollisions();
 
     // Track yard progress
-    if (ball.ballCarrier) {
-        state.ballX = ball.ballCarrier->sprite.getPosition().x;
+    if (ball.ballcarrier) {
+        state.ballX = ball.ballcarrier->sprite.getPosition().x;
     }
 }
 
 void Game::checkCollisions() {
     // Catch ball
-    if (ball.ballCarrier == nullptr &&
+    if (ball.ballcarrier == nullptr &&
         receiver.getBounds().findIntersection(ball.getBounds()).has_value()) {
         ball.receiveBall(&receiver);
     }
 
     // Tackle
-    if (ball.ballCarrier == &receiver &&
+    if (ball.ballcarrier == &receiver &&
         defender.isTackling(receiver)) {
         endPlay(false);
     }
 
     // Touchdown
-    if (ball.ballCarrier &&
-        endZone.checkTouchdown(*ball.ballCarrier)) {
+    if (ball.ballcarrier &&
+        endZone.checkTD(*ball.ballcarrier)) {
         endPlay(true);
     }
 }

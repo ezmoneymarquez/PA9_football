@@ -6,14 +6,23 @@
 *	Description: This program runs a simple 2D football game.							 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #pragma once
-#include "Player.hpp"
+#include "Entity.hpp"
+
+class Player;
 
 class Ball : public Entity
 {
 public:
 	Player* ballcarrier = nullptr;
 
+	Ball(const sf::Vector2f& position)
+		: Entity(position), ballcarrier(nullptr)
+	{}
+
+	// Optional default
+	Ball() : Ball({ 0.f, 0.f }) {}
+
 	void update(float dt) override;
 	void receiveBall(Player* player); // This function is called when a player receives the ball. It sets the ballcarrier to the player who received the ball.
-	void throwBall(const sf::Vector2f& direction, float force)); // This function is called when the ballcarrier throws the ball. It sets the ballcarrier to nullptr, indicating that the ball is now in the air and not being carried by any player.
+	void throwBall(const sf::Vector2f& direction, float force); // This function is called when the ballcarrier throws the ball. It sets the ballcarrier to nullptr, indicating that the ball is now in the air and not being carried by any player.
 };
