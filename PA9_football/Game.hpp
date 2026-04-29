@@ -21,6 +21,7 @@ private:
     bool playStarted = false;
     bool ballSnapped = false;
 	bool spaceHeldLastFrame = false;
+    bool throwHeldLastFrame = false;
 
     sf::RenderWindow window;
 

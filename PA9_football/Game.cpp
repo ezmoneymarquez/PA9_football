@@ -82,16 +82,19 @@ void Game::processEvents() {
 }
 
 void Game::handleInput() {
-    qb.velocity = { 0.f, 0.f };
+
+    Player* controlled = ball.ballcarrier ? ball.ballcarrier : &qb;
+
+    controlled->velocity = { 0.f, 0.f };
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-        qb.velocity.y = -200.f;
+        controlled->velocity.y = -200.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-        qb.velocity.y = 200.f;
+        controlled->velocity.y = 200.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-        qb.velocity.x = -200.f;
+        controlled->velocity.x = -200.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-        qb.velocity.x = 200.f;
+        controlled->velocity.x = 200.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C))
         playStarted = true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
@@ -159,6 +162,30 @@ void Game::update(float dt) {
 
     handleInput();
 
+    bool throwNow = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
+
+    if (throwNow && !throwHeldLastFrame)
+    {
+        if (playStarted && ball.ballcarrier == &qb)
+        {
+            // choose receiver (simple: closest)
+            Player* targetReceiver = &receiver1;
+
+            float d1 = std::abs(receiver1.sprite.getPosition().x - qb.sprite.getPosition().x);
+            float d2 = std::abs(receiver2.sprite.getPosition().x - qb.sprite.getPosition().x);
+
+            if (d2 < d1)
+                targetReceiver = &receiver2;
+
+            sf::Vector2f dir =
+                targetReceiver->sprite.getPosition() - qb.sprite.getPosition();
+
+            ball.throwBall(dir, 50000.f);
+        }
+    }
+
+    throwHeldLastFrame = throwNow;
+
     if (!playStarted)
         return;
 
@@ -192,23 +219,55 @@ void Game::update(float dt) {
     clamp(dLine1.sprite);
 }
 
-void Game::checkCollisions() {
-    // Catch ball
-    if (ball.ballcarrier == nullptr &&
-        receiver1.getBounds().findIntersection(ball.getBounds()).has_value()) {
-        ball.receiveBall(&receiver1);
+//void Game::checkCollisions() {
+//    // Catch ball
+//    if (ball.ballcarrier == nullptr &&
+//        receiver1.getBounds().findIntersection(ball.getBounds()).has_value()) {
+//        ball.receiveBall(&receiver1);
+//    }
+//
+//    // Tackle
+//    if (ball.ballcarrier == &receiver1 &&
+//        defender1.isTackling(receiver1)) {
+//        endPlay(false);
+//    }
+//
+//    // Touchdown
+//    if (ball.ballcarrier &&
+//        endZone.checkTD(*ball.ballcarrier)) {
+//        endPlay(true);
+//    }
+//}
+
+void Game::checkCollisions()
+{
+    // Only if ball is in the air
+    if (ball.ballcarrier == nullptr)
+    {
+        if (receiver1.getBounds().findIntersection(ball.getBounds()))
+        {
+            ball.receiveBall(&receiver1);
+        }
+
+        if (receiver2.getBounds().findIntersection(ball.getBounds()))
+        {
+            ball.receiveBall(&receiver2);
+        }
     }
 
-    // Tackle
-    if (ball.ballcarrier == &receiver1 &&
-        defender1.isTackling(receiver1)) {
-        endPlay(false);
-    }
+    // Tackle logic (whoever has ball)
+    Player* carrier = ball.ballcarrier ? ball.ballcarrier : &qb;
 
-    // Touchdown
-    if (ball.ballcarrier &&
-        endZone.checkTD(*ball.ballcarrier)) {
-        endPlay(true);
+    if (defender1.getBounds().findIntersection(carrier->getBounds()))
+    {
+        playStarted = false;
+
+        float gained = state.ballX - state.startX;
+
+        if (!state.checkFirstDown(gained)) {
+            state.yardsToGo -= gained;
+            state.down++;
+        }
     }
 }
 
