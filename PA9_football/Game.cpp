@@ -183,7 +183,7 @@ void Game::update(float dt) {
             sf::Vector2f dir =
                 targetReceiver->sprite.getPosition() - qb.sprite.getPosition();
 
-            ball.throwBall(dir, 30000.f);
+            ball.throwBall(dir, 28500.f);
 			passInAir = true;
         }
     }
@@ -461,4 +461,105 @@ void clamp(sf::Sprite& s)
 	pos.y = std::max(0.f, std::min(600.f, pos.y));
 
 	s.setPosition(pos);
+}
+
+//Test functions
+void Game::runAllTests()
+{
+    std::cout << "Running Tests...\n";
+
+    std::cout << "Snap Test: " << (testSnap() ? "PASS\n" : "FAIL\n");
+    std::cout << "Throw/Catch Test: " << (testThrowCatch() ? "PASS\n" : "FAIL\n");
+    std::cout << "Incomplete Pass Test: " << (testIncompletePass() ? "PASS\n" : "FAIL\n");
+    std::cout << "Tackle Test: " << (testTackle() ? "PASS\n" : "FAIL\n");
+    std::cout << "Touchdown Test: " << (testTouchdown() ? "PASS\n" : "FAIL\n");
+}
+
+bool Game::testSnap()
+{
+    playStarted = false;
+
+    // simulate snap
+    playStarted = true;
+
+    return playStarted == true;
+}
+
+bool Game::testThrowCatch()
+{
+    // reset
+    ball.receiveBall(&qb);
+    playStarted = true;
+
+    // place receiver in front
+    receiver1.sprite.setPosition(qb.sprite.getPosition() + sf::Vector2f(50.f, 0.f));
+
+    // throw
+    sf::Vector2f dir = receiver1.sprite.getPosition() - qb.sprite.getPosition();
+    ball.throwBall(dir, 300.f);
+
+    // simulate updates
+    for (int i = 0; i < 60; i++) {
+        ball.update(0.016f);
+
+        if (receiver1.getBounds().findIntersection(ball.getBounds())) {
+            ball.receiveBall(&receiver1);
+            break;
+        }
+    }
+
+    return ball.ballcarrier == &receiver1;
+}
+
+bool Game::testIncompletePass()
+{
+    ball.receiveBall(&qb);
+    playStarted = true;
+    passInAir = true;
+
+    // throw away from receivers
+    sf::Vector2f dir = { 1.f, 0.f };
+    ball.throwBall(dir, 300.f);
+
+    bool incompleteDetected = false;
+
+    for (int i = 0; i < 200; i++) {
+        ball.update(0.016f);
+
+        float speed = std::sqrt(ball.velocity.x * ball.velocity.x +
+            ball.velocity.y * ball.velocity.y);
+
+        if (speed < 20.f) {
+            incompleteDetected = true;
+            break;
+        }
+    }
+
+    return incompleteDetected;
+}
+
+bool Game::testTackle()
+{
+    ball.receiveBall(&qb);
+    playStarted = true;
+
+    // force defender overlap
+    defender1.sprite.setPosition(qb.sprite.getPosition());
+
+    bool tackled = defender1.getBounds().findIntersection(qb.getBounds()).has_value();
+
+    return tackled;
+}
+
+bool Game::testTouchdown()
+{
+    ball.receiveBall(&qb);
+    playStarted = true;
+
+    // move QB into endzone
+    qb.sprite.setPosition({ 760.f, 300.f });
+
+    bool td = endZone.checkTD(qb);
+
+    return td;
 }

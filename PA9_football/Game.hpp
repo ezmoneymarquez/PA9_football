@@ -63,6 +63,9 @@ public:
     // Starts the clock and begins the main game loop
     void run();
 
+    void runAllTests();
+
+
 private:
     
     //
@@ -73,6 +76,15 @@ private:
     void handleInput();
     void checkCollisions();
     void endPlay(bool touchdown);
+
+    //test functions
+
+    bool testSnap();
+    bool testThrowCatch();
+    bool testIncompletePass();
+    bool testTackle();
+    bool testTouchdown();
 };
 
-void clamp(sf::Sprite& s);
+void clamp(sf::Sprite& s); //stay in window boundaries
+

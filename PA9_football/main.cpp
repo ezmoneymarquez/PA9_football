@@ -18,6 +18,9 @@ int main()
     std::map<std::string, sf::Texture> textures;
 
     Game game;
+
+    game.runAllTests();
+
     game.run();
 
 
